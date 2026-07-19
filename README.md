@@ -1,97 +1,34 @@
 # Equilibrium AI
 
-Send one prompt to OpenAI, Groq (Meta LLaMA), and Gemini in parallel, then have
-Gemini act as a final evaluator that synthesizes the strongest possible answer from
-all three — not just a copy of one model's response.
+<img src="frontend/public/favicon.jpg" width="100" height="100" align="right" alt="Equilibrium AI Logo" />
 
-## How it works
+Equilibrium AI is a web application that queries multiple large language models in parallel, weighs their responses, and uses an evaluator model to synthesize a single balanced final answer.
 
-1. The frontend sends your prompt to the backend at `POST /api/equilibrium`.
-2. The backend fires the prompt at OpenAI, Groq (LLaMA), and Gemini simultaneously
-   (`Promise.allSettled`, so one failing model doesn't block the others).
-3. Whichever responses succeed are handed to a Gemini "evaluator" call, which
-   is prompted to compare them, note disagreements, and write one polished
-   final answer plus a short "Evaluator Notes" section.
-4. The frontend shows the final answer prominently, with each model's raw
-   response available in a collapsible card underneath.
+## How the Project Works
+1. **User Input**: The user enters a prompt in the web interface.
+2. **Parallel Dispatching**: The backend receives the prompt and dispatches it concurrently to three separate contestant models using `Promise.allSettled` (so rate limits or outages on one provider don't block the others).
+3. **Consolidation**: The backend compiles all successful responses and feeds them to the evaluator model.
+4. **Synthesis**: The evaluator analyzes the responses, resolves discrepancies, and outputs a single cohesive answer along with evaluation notes.
+5. **Rendering**: The frontend displays the synthesized response prominently, with the individual models' raw answers accessible underneath.
 
-## Project structure
+## Interface Type
+This is a **UI-based web application**:
+- **Frontend**: A React application built with Vite and vanilla CSS featuring a dynamic balance scale visualization.
+- **Backend**: An Express.js Node API that orchestrates model calls and synthesis, designed to be deployed on Vercel as serverless functions.
 
-```
-equilibrium-ai/
-├── backend/           Express API (Node)
-│   ├── server.js       orchestrates the parallel calls + evaluation
-│   └── services/
-│       ├── openai.js
-│       ├── groq.js
-│       ├── gemini.js
-│       └── evaluator.js
-└── frontend/          React + Vite UI
-    └── src/
-        ├── App.jsx
-        └── components/
-            ├── PromptInput.jsx
-            ├── BalanceScale.jsx   the "weighing" visual
-            ├── ContestantCard.jsx
-            └── FinalAnswer.jsx
-```
+## Models and Providers Used
+*   **OpenAI API (via Groq)**: `llama-3.3-70b-versatile` (or customizable via `OPENAI_MODEL` environment variable)
+*   **Groq API**: `llama-3.3-70b-versatile` (or customizable via `GROQ_MODEL`)
+*   **Google Gemini API**: `gemini-3.1-flash-lite` (or customizable via `GEMINI_MODEL`)
+*   **Evaluator Model (OpenAI via Groq)**: `openai/gpt-oss-120b` (or customizable via `OPENAI_EVALUATOR_MODEL`)
 
-## Setup
-
-### 1. Backend
-
-```bash
-cd backend
-npm install
-cp .env.example .env
-# edit .env and paste in your real API keys
-npm run dev
-```
-
-Runs on `http://localhost:5001`.
-
-You need API keys from:
-- OpenAI — https://platform.openai.com/api-keys
-- Groq — https://console.groq.com/keys
-- Google AI Studio (Gemini) — https://aistudio.google.com/apikey
-
-### 2. Frontend
-
-```bash
-cd frontend
-npm install
-cp .env.example .env   # optional — only needed for production deploys
-npm run dev
-```
-
-Runs on `http://localhost:5173` and proxies `/api` requests to the backend
-during development (see `vite.config.js`).
-
-## Notes on models
-
-Default models are set in `backend/.env.example` and can be changed there:
-- `OPENAI_MODEL` (default `gpt-4o`)
-- `GROQ_MODEL` (default `llama-3.3-70b-versatile`) — Meta LLaMA served via Groq
-- `GEMINI_MODEL` (default `gemini-2.0-flash`) — used for the "contestant" call
-- `GEMINI_EVALUATOR_MODEL` (default `gemini-2.5-pro`) — used for the final
-  synthesis, since evaluation benefits from a stronger model even if the
-  contestant call uses a faster/cheaper one
-
-Other Groq LLaMA variants you can swap in via `GROQ_MODEL`:
-- `llama-3.1-8b-instant` — fastest, cheapest
-- `llama3-70b-8192` — larger context window
-
-Double-check current model names against each provider's docs before shipping —
-provider lineups change.
-
-## Extending it
-
-- **Add a model**: create `services/yourmodel.js` following the same
-  `{ model, text }` return shape, then add it to the `contestants` array in
-  `server.js`.
-- **Show which model "won" a section**: the evaluator prompt already tells
-  Gemini not to name models in the final answer itself, but you could ask it
-  to return structured JSON with per-paragraph attribution if you want that
-  level of detail.
-- **Rate limiting / caching**: not included — add before any public deploy so
-  one user can't rack up API costs across all three providers per request.
+## How the Self-Consistency Flow is Implemented
+The self-consistency / evaluation flow is orchestrated in [evaluator.js](file:///c:/Users/User/Downloads/equilibrium-ai/equilibrium-ai/backend/services/evaluator.js):
+1. **Prompt Compilation**: The system constructs an evaluation prompt containing the user's original question alongside the numbered responses from all successfully queried contestant models.
+2. **System Prompt Rules**: The evaluator is guided by a system prompt to:
+   - Weigh and synthesize the strongest points and facts from each response.
+   - Resolve disagreements using its internal knowledge base.
+   - Output only clean, direct text (no markdown tables, converting any tabular data into clean list items or bullet points).
+   - Omit meta-commentary or model attributions in the final answer itself.
+   - Append an **Evaluator Notes** section summarizing strengths and differences between the models.
+3. **Extraction**: The backend defensively splits the evaluator response into the **Final Answer** and **Evaluator Notes** using regular expressions and serves it back to the UI.
