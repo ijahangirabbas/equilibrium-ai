@@ -1,0 +1,72 @@
+.contestant-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.contestant-card__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.contestant-card__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+
+.contestant-card--openai .contestant-card__dot {
+  background: #74aa9c;
+}
+
+.contestant-card--groq .contestant-card__dot {
+  background: #f55036;
+}
+
+.contestant-card--gemini .contestant-card__dot {
+  background: var(--accent-teal);
+}
+
+.contestant-card__label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  flex: 1;
+}
+
+.contestant-card__status {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.contestant-card__chevron {
+  color: var(--text-muted);
+  width: 16px;
+  text-align: center;
+}
+
+.contestant-card__body {
+  padding: 0 14px 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.contestant-card__body p:first-child {
+  margin-top: 0;
+}
+
+.contestant-card__error {
+  color: var(--danger);
+}

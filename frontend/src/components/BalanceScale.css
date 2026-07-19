@@ -1,0 +1,44 @@
+.scale {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.scale__svg {
+  width: 220px;
+  height: 110px;
+}
+
+.beam {
+  transform: rotate(0deg);
+  transition: transform 0.6s cubic-bezier(0.34, 1.2, 0.4, 1);
+}
+
+.beam--weighing {
+  animation: tilt 2.4s ease-in-out infinite;
+}
+
+.beam--settled {
+  transform: rotate(0deg);
+}
+
+@keyframes tilt {
+  0% {
+    transform: rotate(-6deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+  100% {
+    transform: rotate(-6deg);
+  }
+}
+
+.scale__caption {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}

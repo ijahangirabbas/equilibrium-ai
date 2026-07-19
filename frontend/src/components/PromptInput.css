@@ -1,0 +1,55 @@
+.prompt-input {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.prompt-input__field {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 64px;
+}
+
+.prompt-input__field::placeholder {
+  color: var(--text-muted);
+}
+
+.prompt-input__field:focus {
+  outline: none;
+}
+
+.prompt-input__submit {
+  align-self: flex-end;
+  background: var(--accent-brass);
+  color: #0e1526;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: filter 0.15s ease, transform 0.15s ease;
+}
+
+.prompt-input__submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.prompt-input__submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.prompt-input__submit:disabled {
+  background: var(--surface-2);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}

@@ -1,0 +1,52 @@
+:root {
+  /* Color tokens */
+  --bg: #0e1526;
+  --surface: #161f35;
+  --surface-2: #1e2a47;
+  --border: #2a3655;
+  --accent-brass: #c9a227;
+  --accent-brass-soft: rgba(201, 162, 39, 0.16);
+  --accent-teal: #5fd1c0;
+  --text-primary: #edeff4;
+  --text-muted: #8c97b3;
+  --danger: #e0715a;
+
+  /* Type tokens */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+button {
+  font-family: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent-teal);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}

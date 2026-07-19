@@ -1,0 +1,44 @@
+.final-answer {
+  background: var(--surface);
+  border: 1px solid var(--accent-brass);
+  box-shadow: 0 0 0 1px var(--accent-brass-soft), 0 12px 32px rgba(0, 0, 0, 0.35);
+  border-radius: 12px;
+  padding: 28px 32px;
+}
+
+.final-answer__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-brass);
+  margin-bottom: 14px;
+}
+
+.final-answer__body {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+
+.final-answer__body p:first-child {
+  margin-top: 0;
+}
+
+.final-answer__notes {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.final-answer__notes summary {
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--accent-teal);
+}
